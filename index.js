@@ -1,15 +1,54 @@
 #! /usr/bin/env node
 
 /**
- * @return src, dest
+ * args:
+ * dest: {
+ *   type: relative
+ *   required: true
+ * }
+ * category: {
+ *   default: vue
+ * }
+ *
  */
-// checkArgs();
-// copy(src, dest);
 
-const copy = require('fs-extra').copy;
+const copy = require('fs-extra').copy
 
-const checkArgs = () => {
-    console.log(process.argv[0])
+const path = require('path')
+const cwd = process.cwd()
+
+const resolve = (relativePath) => {
+    return path.posix.join(cwd, relativePath)
 }
 
-checkArgs();
+/**
+ * Check args.
+ *
+ * @return category, dest
+ */
+const checkArgs = () => {
+    const dest = resolve(process.argv[2])
+
+    let category
+    process.argv.forEach((argv, idx, argvs) => {
+        if (argv === '--type' || argv === '-t') {
+            category = argvs[idx + 1]
+        }
+    })
+
+    return {
+        dest,
+        category
+    }
+}
+
+let { dest, category } = checkArgs()
+
+category = category || 'vue' // default vue
+const src = path.posix.join('./templates/', category)
+
+try {
+    copy(src, dest)
+} catch (err) {
+    throw err
+}
