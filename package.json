@@ -5,7 +5,7 @@
   "bin": {
     "cvc": "index.js"
   },
-  "main": "index.js",
+  "main": "lib/bundle.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
